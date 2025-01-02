@@ -1,5 +1,5 @@
-import { MachineStatus } from '../../commons/enums';
-import { IEvent } from '../../interfaces/event.interface';
+import { MachineStatus } from '../commons/enums';
+import { IEvent } from '../interfaces/event.interface';
 
 export class MachineSaleEvent implements IEvent {
   constructor(

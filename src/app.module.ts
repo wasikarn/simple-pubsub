@@ -3,11 +3,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MachineModule } from './machine/machine.module';
+import { EventService } from './services/event.service';
 
 @Module({
   controllers: [AppController],
-  imports: [EventEmitterModule.forRoot(), MachineModule],
-  providers: [AppService],
+  imports: [EventEmitterModule.forRoot()],
+  providers: [AppService, EventService],
 })
 export class AppModule {}

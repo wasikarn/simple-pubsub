@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { MachineEventType } from '../../commons/enums';
-import { ISubscriber } from '../../interfaces/subscriber.interface';
+import { MachineEventType } from '../commons/enums';
+import { ISubscriber } from '../interfaces/subscriber.interface';
 import { MachineRefillEvent } from '../publishers/machine-refill-event';
 
 @Injectable()
