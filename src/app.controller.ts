@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { eventGenerator } from './commons/helpers';
+import { IEvent } from './interfaces/event.interface';
 
 @Controller()
 export class AppController {
@@ -9,8 +10,10 @@ export class AppController {
 
   @Get()
   run(): void {
-    Array(5)
+    const events: IEvent[] = Array(5)
       .fill(undefined)
-      .forEach((): void => eventGenerator(this.appService));
+      .map((): IEvent => eventGenerator());
+
+    events.map((event: IEvent): void => this.appService.publish(event));
   }
 }

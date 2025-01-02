@@ -1,4 +1,4 @@
-import { AppService } from '../app.service';
+import { IEvent } from '../interfaces/event.interface';
 import { MachineRefillEvent } from '../publishers/machine-refill-event';
 import { MachineSaleEvent } from '../publishers/machine-sale-event';
 
@@ -14,18 +14,16 @@ export const randomMachine: () => string = (): string => {
   return '003';
 };
 
-export function eventGenerator(appService: AppService): void {
+export function eventGenerator(): IEvent {
   const random: number = Math.random();
 
   if (random < 0.5) {
     const saleQty: number = Math.random() < 0.5 ? 1 : 2;
 
-    appService.publish(new MachineSaleEvent(saleQty, randomMachine()));
-
-    return;
+    return new MachineSaleEvent(saleQty, randomMachine());
   }
 
   const refillQty: number = Math.random() < 0.5 ? 3 : 5;
 
-  appService.publish(new MachineRefillEvent(refillQty, randomMachine()));
+  return new MachineRefillEvent(refillQty, randomMachine());
 }
