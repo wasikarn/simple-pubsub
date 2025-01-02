@@ -16,7 +16,10 @@ export class StockLevelOkSubscriber implements ISubscriber {
 
   @OnEvent(MachineStatus.STOCK_LEVEL_OK)
   handle(event: StockLevelOkEvent): void {
-    const machine: Machine = this.machines[2];
+    const indexOfMachine: number = this.machines.findIndex(
+      (machine: Machine): boolean => machine.getId() === event.machineId(),
+    );
+    const machine: Machine = this.machines[indexOfMachine];
     const stockLevel: number = machine.getStockLevel();
 
     console.log(

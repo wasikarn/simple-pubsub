@@ -8,25 +8,19 @@ import { MachineSaleEvent } from '../publishers/machine-sale-event';
 
 @Injectable()
 export class MachineSaleSubscriber implements ISubscriber {
-  public machines: Map<string, Machine>;
+  public machines: Machine[];
 
   constructor(machines: Machine[]) {
-    this.machines = new Map(
-      machines.map((machine: Machine): [string, Machine] => [
-        machine.getId(),
-        machine,
-      ]),
-    );
+    this.machines = machines;
   }
 
   @OnEvent(MachineStatus.SALE)
   handle(event: MachineSaleEvent): void {
     const quantity: number = event.getSoldQuantity();
-    const machine: Machine | undefined = this.machines.get(event.machineId());
-
-    if (!machine) {
-      throw new Error(`Machine with ID ${event.machineId()} not found.`);
-    }
+    const indexOfMachine: number = this.machines.findIndex(
+      (machine: Machine): boolean => machine.getId() === event.machineId(),
+    );
+    const machine: Machine = this.machines[indexOfMachine];
 
     machine.reduceStock(quantity);
     const stockLevel: number = machine.getStockLevel();
