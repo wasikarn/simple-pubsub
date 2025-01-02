@@ -3,8 +3,8 @@ import { IEvent } from '../interfaces/event.interface';
 
 export class MachineRefillEvent implements IEvent {
   constructor(
-    private readonly _machineId: string,
     private readonly _refill: number,
+    private readonly _machineId: string,
   ) {
     console.log(`${MachineRefillEvent.name} emitted`);
   }

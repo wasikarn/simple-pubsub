@@ -3,8 +3,8 @@ import { IEvent } from '../interfaces/event.interface';
 
 export class MachineSaleEvent implements IEvent {
   constructor(
-    private readonly _machineId: string,
     private readonly _sold: number,
+    private readonly _machineId: string,
   ) {
     console.log(`${MachineSaleEvent.name} emitted`);
   }
