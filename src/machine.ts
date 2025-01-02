@@ -1,18 +1,20 @@
 export class Machine {
-  constructor(
-    private readonly id: string,
-    private stockLevel = 10,
-  ) {}
+  public id: string;
+  public stockLevel = 10;
 
-  getId() {
+  constructor(id: string) {
+    this.id = id;
+  }
+
+  getId(): string {
     return this.id;
   }
 
-  getStockLevel() {
+  getStockLevel(): number {
     return this.stockLevel;
   }
 
-  sell(quantity: number): void {
+  reduceStock(quantity: number): void {
     if (this.stockLevel >= quantity) {
       this.stockLevel -= quantity;
       console.log(
@@ -23,5 +25,12 @@ export class Machine {
     }
 
     console.log(`Machine ${this.id} has insufficient stock.`);
+  }
+
+  refillStock(quantity: number): void {
+    this.stockLevel += quantity;
+    console.log(
+      `Machine ${this.id} refilled ${quantity}. Remaining stock: ${this.stockLevel}.`,
+    );
   }
 }
