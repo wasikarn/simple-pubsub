@@ -1,8 +1,11 @@
-import { EventType } from '../../commons/enums';
+import { MachineStatus } from '../../commons/enums';
 import { IEvent } from '../../interfaces/event.interface';
 
 export class StockLevelOkEvent implements IEvent {
-  constructor(private readonly _machineId: string) {
+  constructor(
+    private readonly _machineId: string,
+    private readonly _stock: number,
+  ) {
     console.log(`${StockLevelOkEvent.name} emitted`);
   }
 
@@ -11,6 +14,10 @@ export class StockLevelOkEvent implements IEvent {
   }
 
   type(): string {
-    return EventType.STOCK_LEVEL_OK;
+    return MachineStatus.STOCK_LEVEL_OK;
+  }
+
+  getStockQuantity(): number {
+    return this._stock;
   }
 }

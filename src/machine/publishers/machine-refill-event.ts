@@ -1,10 +1,10 @@
-import { EventType } from '../../commons/enums';
+import { MachineStatus } from '../../commons/enums';
 import { IEvent } from '../../interfaces/event.interface';
 
 export class MachineRefillEvent implements IEvent {
   constructor(
-    private readonly _refill: number,
     private readonly _machineId: string,
+    private readonly _refill: number,
   ) {
     console.log(`${MachineRefillEvent.name} emitted`);
   }
@@ -14,6 +14,10 @@ export class MachineRefillEvent implements IEvent {
   }
 
   type(): string {
-    return EventType.REFILL;
+    return MachineStatus.REFILL;
+  }
+
+  getRefillQuantity(): number {
+    return this._refill;
   }
 }

@@ -1,10 +1,10 @@
-import { EventType } from '../../commons/enums';
+import { MachineStatus } from '../../commons/enums';
 import { IEvent } from '../../interfaces/event.interface';
 
 export class MachineSaleEvent implements IEvent {
   constructor(
-    private readonly _sold: number,
     private readonly _machineId: string,
+    private readonly _sold: number,
   ) {
     console.log(`${MachineSaleEvent.name} emitted`);
   }
@@ -14,7 +14,7 @@ export class MachineSaleEvent implements IEvent {
   }
 
   type(): string {
-    return EventType.SALE;
+    return MachineStatus.SALE;
   }
 
   getSoldQuantity(): number {
