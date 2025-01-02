@@ -16,6 +16,14 @@ export class MachineRefillSubscriber implements ISubscriber {
 
   @OnEvent(MachineStatus.REFILL)
   handle(event: MachineRefillEvent): void {
-    this.machines[2].refillStock(event.getRefillQuantity());
+    const quantity: number = event.getRefillQuantity();
+    const machine: Machine = this.machines[2];
+
+    machine.refillStock(quantity);
+    const stockLevel: number = machine.getStockLevel();
+
+    console.log(
+      `Machine ${event.machineId()}, refilled ${quantity}. Remaining stock: ${stockLevel}.`,
+    );
   }
 }

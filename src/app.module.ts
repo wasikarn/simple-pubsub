@@ -22,8 +22,14 @@ import { StockLevelOkSubscriber } from './subscribers/stock-level-ok-subscriber'
       provide: MachineRefillSubscriber,
       useValue: new MachineRefillSubscriber(machines),
     },
-    LowStockWarningSubscriber,
-    StockLevelOkSubscriber,
+    {
+      provide: LowStockWarningSubscriber,
+      useValue: new LowStockWarningSubscriber(machines),
+    },
+    {
+      provide: StockLevelOkSubscriber,
+      useValue: new StockLevelOkSubscriber(machines),
+    },
   ],
 })
 export class AppModule {}

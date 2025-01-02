@@ -15,22 +15,14 @@ export class Machine {
   }
 
   reduceStock(quantity: number): void {
-    if (this.stockLevel >= quantity) {
-      this.stockLevel -= quantity;
-      console.log(
-        `Machine ${this.id} sold ${quantity}. Remaining stock: ${this.stockLevel}.`,
-      );
-
+    if (this.stockLevel < quantity) {
       return;
     }
 
-    console.log(`Machine ${this.id} has insufficient stock.`);
+    this.stockLevel -= quantity;
   }
 
   refillStock(quantity: number): void {
     this.stockLevel += quantity;
-    console.log(
-      `Machine ${this.id} refilled ${quantity}. Remaining stock: ${this.stockLevel}.`,
-    );
   }
 }

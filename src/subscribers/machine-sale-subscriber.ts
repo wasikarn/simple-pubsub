@@ -16,6 +16,14 @@ export class MachineSaleSubscriber implements ISubscriber {
 
   @OnEvent(MachineStatus.SALE)
   handle(event: MachineSaleEvent): void {
-    this.machines[2].reduceStock(event.getSoldQuantity());
+    const quantity: number = event.getSoldQuantity();
+    const machine: Machine = this.machines[2];
+
+    machine.reduceStock(quantity);
+    const stockLevel: number = machine.getStockLevel();
+
+    console.log(
+      `Machine ${event.machineId()}, sold ${quantity}. Remaining stock: ${stockLevel}.`,
+    );
   }
 }
