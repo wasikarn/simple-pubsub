@@ -4,17 +4,23 @@ import { EventType } from '../../commons/enums';
 import { IEvent } from '../../interfaces/event.interface';
 
 @Injectable()
-export class MachineRefillEvent implements IEvent {
+export class MachineSaleEvent implements IEvent {
   constructor(
-    private readonly _refill: number,
+    private readonly _sold: number,
     private readonly _machineId: string,
-  ) {}
+  ) {
+    console.log(`${MachineSaleEvent.name} emitted`);
+  }
 
   machineId(): string {
     return this._machineId;
   }
 
   type(): string {
-    return EventType.REFILL;
+    return EventType.SALE;
+  }
+
+  getSoldQuantity(): number {
+    return this._sold;
   }
 }
