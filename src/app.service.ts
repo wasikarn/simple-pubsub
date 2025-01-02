@@ -1,25 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { MachineEventType } from './commons/enums';
-import { MachineRefillEvent } from './publishers/machine-refill-event';
-import { MachineSaleEvent } from './publishers/machine-sale-event';
+import { IEvent } from './interfaces/event.interface';
+import { IPublishSubscribeService } from './interfaces/publish-subscribe-service.interface';
 
 @Injectable()
-export class AppService {
+export class AppService implements IPublishSubscribeService {
   constructor(private eventEmitter: EventEmitter2) {}
 
-  sale(sold: number, machineId: string): void {
-    this.eventEmitter.emit(
-      MachineEventType.SALE,
-      new MachineSaleEvent(sold, machineId),
-    );
+  publish(event: IEvent): void {
+    this.eventEmitter.emit(event.type(), event);
   }
 
-  refill(refill: number, machineId: string): void {
-    this.eventEmitter.emit(
-      MachineEventType.REFILL,
-      new MachineRefillEvent(refill, machineId),
-    );
+  subscribe(type: string, handler: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  unsubscribe(type: string, handler?: any) {
+    throw new Error('Method not implemented.');
   }
 }
