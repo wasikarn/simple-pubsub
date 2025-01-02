@@ -1,9 +1,6 @@
-import { Injectable } from '@nestjs/common';
-
 import { EventType } from '../../commons/enums';
 import { IEvent } from '../../interfaces/event.interface';
 
-@Injectable()
 export class MachineSaleEvent implements IEvent {
   constructor(
     private readonly _sold: number,
