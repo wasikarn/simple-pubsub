@@ -28,9 +28,13 @@ export class MachineRefillSubscriber implements ISubscriber {
     machine.incrementStock(event.getRefillQuantity());
 
     if (machine.isStockSufficient()) {
+      machine.isLowStockWaring = false;
+
       this.pubSubService.publish(
         new StockLevelOkEvent(machine.id, machine.stockLevel),
       );
+
+      return;
     }
 
     this.logger.log(

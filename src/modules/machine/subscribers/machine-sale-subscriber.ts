@@ -25,12 +25,22 @@ export class MachineSaleSubscriber implements ISubscriber {
       throw new NotFoundException();
     }
 
+    if (machine.isOutOfStock()) {
+      this.logger.error(`Machine out of stock. machineId: ${machine.id}`);
+
+      return;
+    }
+
     machine.decrementStock(event.getSoldQuantity());
 
-    if (machine.isLowerStock()) {
+    if (machine.isLowerStock() && !machine.isLowStockWaring) {
+      machine.isLowStockWaring = true;
+
       this.pubSubService.publish(
         new LowStockWarningEvent(machine.id, machine.stockLevel),
       );
+
+      return;
     }
 
     this.logger.log(

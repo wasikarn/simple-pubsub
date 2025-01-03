@@ -14,7 +14,7 @@ export class LowStockWarningSubscriber implements ISubscriber {
     const machineId: string = event.machineId();
     const quantity: number = event.getStockQuantity();
 
-    this.logger.log(
+    this.logger.warn(
       `Low stock warning for machine ${machineId}: ${quantity} units left.`,
     );
   }
