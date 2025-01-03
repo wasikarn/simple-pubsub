@@ -1,12 +1,10 @@
-import { Logger } from '@nestjs/common';
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { StockLevelOkEvent } from '../events/stock-level-ok-event';
+import { ISubscriber } from '../interfaces/subscriber.interface';
 
-@EventsHandler(StockLevelOkEvent)
-export class StockLevelOkSubscriber
-  implements IEventHandler<StockLevelOkEvent>
-{
+@Injectable()
+export class StockLevelOkSubscriber implements ISubscriber {
   private readonly logger: Logger = new Logger(StockLevelOkSubscriber.name);
 
   handle(event: StockLevelOkEvent): void {

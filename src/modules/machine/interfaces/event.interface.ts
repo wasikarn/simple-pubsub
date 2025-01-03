@@ -1,6 +1,4 @@
-import { IEvent as IEventCqrs } from '@nestjs/cqrs';
-
-export interface IEvent extends IEventCqrs {
+export interface IEvent {
   machineId(): string;
   type(): string;
 }

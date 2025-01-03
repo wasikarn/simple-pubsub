@@ -1,29 +1,34 @@
 import { Controller, Get } from '@nestjs/common';
 
+import { machines } from './commons/constants';
+import { InventoryState } from './commons/enums';
 import { eventGenerator } from './commons/helpers';
-import { Machine } from './modules/machine/entities/machine.entity';
 import { IEvent } from './modules/machine/interfaces/event.interface';
-import { MachineService } from './modules/machine/machine.service';
-import { PublishSubscribeService } from './modules/machine/publish-subscribe.service';
+import { PublishSubscribeService } from './modules/machine/services/publish-subscribe.service';
+import { LowStockWarningSubscriber } from './modules/machine/subscribers/low-stock-warning-subscriber';
+import { MachineRefillSubscriber } from './modules/machine/subscribers/machine-refill-subscriber';
+import { MachineSaleSubscriber } from './modules/machine/subscribers/machine-sale-subscriber';
+import { StockLevelOkSubscriber } from './modules/machine/subscribers/stock-level-ok-subscriber';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly pubSubService: PublishSubscribeService,
-    private readonly machineService: MachineService,
-  ) {}
+  constructor(private readonly pubSubService: PublishSubscribeService) {}
 
   @Get()
   run(): void {
-    const machines: Machine[] = [
-      new Machine('001'),
-      new Machine('002'),
-      new Machine('003'),
-    ];
+    const pubSubService = new PublishSubscribeService();
+    const saleSubscriber = new MachineSaleSubscriber(machines);
+    const refillSubscriber = new MachineRefillSubscriber(machines);
+    const lowStockWarningSubscriber = new LowStockWarningSubscriber();
+    const stockLevelOkSubscriber = new StockLevelOkSubscriber();
 
-    machines.forEach(async (machine: Machine): Promise<void> => {
-      await this.machineService.findOrCreate(machine);
-    });
+    pubSubService.subscribe(InventoryState.SALE, saleSubscriber);
+    pubSubService.subscribe(InventoryState.REFILL, refillSubscriber);
+    pubSubService.subscribe(
+      InventoryState.STOCK_WARNING,
+      lowStockWarningSubscriber,
+    );
+    pubSubService.subscribe(InventoryState.STOCK_OK, stockLevelOkSubscriber);
 
     const events: IEvent[] = Array(5)
       .fill(undefined)

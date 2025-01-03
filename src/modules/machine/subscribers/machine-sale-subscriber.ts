@@ -1,44 +1,49 @@
-import { Logger, NotFoundException } from '@nestjs/common';
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import {
-  Machine,
-  MachineDocument,
-  MachineModel,
-} from '../entities/machine.entity';
+import { Machine } from '../entities/machine.entity';
 import { LowStockWarningEvent } from '../events/low-stock-warning-event';
 import { MachineSaleEvent } from '../events/machine-sale-event';
+import { ISubscriber } from '../interfaces/subscriber.interface';
 
-@EventsHandler(MachineSaleEvent)
-export class MachineSaleSubscriber implements IEventHandler<MachineSaleEvent> {
+@Injectable()
+export class MachineSaleSubscriber implements ISubscriber {
   private readonly logger: Logger = new Logger(MachineSaleSubscriber.name);
 
-  constructor(@InjectModel(Machine.name) private machineModel: MachineModel) {}
+  constructor(private readonly machines: Machine[]) {}
 
-  async handle(event: MachineSaleEvent): Promise<void> {
-    const machine: MachineDocument | null = await this.machineModel.findOne({
-      _id: event.machineId(),
-    });
+  handle(event: MachineSaleEvent): void {
+    const machine: Machine | undefined = this.machines.find(
+      (machine: Machine): boolean => machine.id === event.machineId(),
+    );
 
     if (!machine) {
-      throw new NotFoundException(
-        `Machine with id ${event.machineId()} not found`,
-      );
+      throw new NotFoundException();
     }
 
     machine.stockLevel -= event.getSoldQuantity();
 
-    if (machine.stockLevel < machine.threshold && !machine.lowStock) {
-      machine.lowStock = true;
-
-      this.logger.log(
-        'Stock dropped below threshold, emitting LowStockWarningEvent',
-      );
-
+    if (this.isLowStockWarningNeeded(machine)) {
+      machine.lowStockWarningEmitted = true;
       new LowStockWarningEvent(machine.id, machine.stockLevel);
+      this.logger.log(
+        `Low stock warning for machine ${machine.id}: ${machine.stockLevel} units left.`,
+      );
     }
 
-    await machine.save();
+    if (this.isAvailableForSale(machine)) {
+      machine.stockLevelOkEmitted = false;
+    }
+
+    this.logger.log('Machine sale event handled.');
+  }
+
+  private isAvailableForSale(machine: Machine) {
+    return machine.stockLevel >= machine.threshold;
+  }
+
+  private isLowStockWarningNeeded(machine: Machine): boolean {
+    return (
+      machine.stockLevel < machine.threshold && !machine.lowStockWarningEmitted
+    );
   }
 }

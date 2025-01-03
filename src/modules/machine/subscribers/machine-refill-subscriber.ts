@@ -1,44 +1,49 @@
-import { Logger, NotFoundException } from '@nestjs/common';
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
-import {
-  Machine,
-  MachineDocument,
-  MachineModel,
-} from '../entities/machine.entity';
+import { Machine } from '../entities/machine.entity';
 import { MachineRefillEvent } from '../events/machine-refill-event';
 import { StockLevelOkEvent } from '../events/stock-level-ok-event';
+import { ISubscriber } from '../interfaces/subscriber.interface';
 
-@EventsHandler(MachineRefillEvent)
-export class MachineRefillSubscriber
-  implements IEventHandler<MachineRefillEvent>
-{
+@Injectable()
+export class MachineRefillSubscriber implements ISubscriber {
   private readonly logger: Logger = new Logger(MachineRefillSubscriber.name);
 
-  constructor(@InjectModel(Machine.name) private machineModel: MachineModel) {}
+  constructor(private readonly machines: Machine[]) {}
 
   async handle(event: MachineRefillEvent): Promise<void> {
-    const machine: MachineDocument | null = await this.machineModel.findOne({
-      _id: event.machineId(),
-    });
+    const machine: Machine | undefined = this.machines.find(
+      (machine: Machine): boolean => machine.id === event.machineId(),
+    );
 
     if (!machine) {
-      throw new NotFoundException(
-        `Machine with id ${event.machineId()} not found`,
-      );
+      throw new NotFoundException();
     }
 
     machine.stockLevel += event.getRefillQuantity();
 
-    if (machine.stockLevel >= machine.threshold && machine.lowStock) {
-      machine.lowStock = false;
-
-      this.logger.log('Stock level ok, emitting StockLevelOkEvent');
-
+    if (this.isStockLevelOk(machine)) {
+      machine.stockLevelOkEmitted = true;
       new StockLevelOkEvent(machine.id, machine.stockLevel);
+      this.logger.log(
+        `Stock level OK for machine ${machine.id}: ${machine.stockLevel} units`,
+      );
     }
 
-    await machine.save();
+    if (this.needsRefill(machine)) {
+      machine.lowStockWarningEmitted = false;
+    }
+
+    this.logger.log('Machine refill event handled.');
+  }
+
+  private needsRefill(machine: Machine) {
+    return machine.stockLevel < machine.threshold;
+  }
+
+  private isStockLevelOk(machine: Machine) {
+    return (
+      machine.stockLevel >= machine.threshold && !machine.stockLevelOkEmitted
+    );
   }
 }

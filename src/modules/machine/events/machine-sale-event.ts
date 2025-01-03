@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-import { MachineStatus } from '../../../commons/enums';
+import { InventoryState } from '../../../commons/enums';
 import { IEvent } from '../interfaces/event.interface';
 
 export class MachineSaleEvent implements IEvent {
@@ -20,7 +20,7 @@ export class MachineSaleEvent implements IEvent {
   }
 
   type(): string {
-    return MachineStatus.SALE;
+    return InventoryState.SALE;
   }
 
   getSoldQuantity(): number {

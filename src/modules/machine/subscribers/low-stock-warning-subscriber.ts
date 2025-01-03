@@ -1,12 +1,10 @@
-import { Logger } from '@nestjs/common';
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { LowStockWarningEvent } from '../events/low-stock-warning-event';
+import { ISubscriber } from '../interfaces/subscriber.interface';
 
-@EventsHandler(LowStockWarningEvent)
-export class LowStockWarningSubscriber
-  implements IEventHandler<LowStockWarningEvent>
-{
+@Injectable()
+export class LowStockWarningSubscriber implements ISubscriber {
   private readonly logger: Logger = new Logger(LowStockWarningSubscriber.name);
 
   handle(event: LowStockWarningEvent): void {

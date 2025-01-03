@@ -1,31 +1,24 @@
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
-import { MongooseModule } from '@nestjs/mongoose';
 
-import { Machine, MachineSchema } from './entities/machine.entity';
-import { MachineService } from './machine.service';
-import { PublishSubscribeService } from './publish-subscribe.service';
+import { machines } from '../../commons/constants';
+import { PublishSubscribeService } from './services/publish-subscribe.service';
 import { LowStockWarningSubscriber } from './subscribers/low-stock-warning-subscriber';
 import { MachineRefillSubscriber } from './subscribers/machine-refill-subscriber';
 import { MachineSaleSubscriber } from './subscribers/machine-sale-subscriber';
 import { StockLevelOkSubscriber } from './subscribers/stock-level-ok-subscriber';
 
 @Module({
-  exports: [MachineService, PublishSubscribeService],
-  imports: [
-    CqrsModule,
-    MongooseModule.forFeature([
-      {
-        name: Machine.name,
-        schema: MachineSchema,
-      },
-    ]),
-  ],
+  exports: [PublishSubscribeService],
   providers: [
-    MachineService,
     PublishSubscribeService,
-    MachineSaleSubscriber,
-    MachineRefillSubscriber,
+    {
+      provide: MachineSaleSubscriber,
+      useValue: new MachineSaleSubscriber(machines),
+    },
+    {
+      provide: MachineRefillSubscriber,
+      useValue: new MachineRefillSubscriber(machines),
+    },
     LowStockWarningSubscriber,
     StockLevelOkSubscriber,
   ],
