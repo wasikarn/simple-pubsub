@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
 
 export type MachineDocument = HydratedDocument<Machine>;
+export type MachineModel = Model<MachineDocument>;
 
 @Schema({ _id: false, collection: 'machines' })
 export class Machine {
@@ -11,23 +12,10 @@ export class Machine {
   @Prop({ default: 10 })
   public stockLevel: number;
 
-  constructor(id: string) {
-    this.id = id;
-  }
-
-  getId(): string {
-    return this.id;
-  }
-
-  getStockLevel(): number {
-    return this.stockLevel;
-  }
+  @Prop({ default: 3 })
+  public threshold: number;
 
   reduceStock(quantity: number): void {
-    if (this.stockLevel < quantity) {
-      return;
-    }
-
     this.stockLevel -= quantity;
   }
 

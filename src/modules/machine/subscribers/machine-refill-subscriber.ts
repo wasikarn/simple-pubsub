@@ -1,32 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectModel } from '@nestjs/mongoose';
 
-import { MachineStatus } from '../../../commons/enums';
 import { MachineRefillEvent } from '../events/machine-refill-event';
-import { ISubscriber } from '../interfaces/subscriber.interface';
-import { Machine } from '../machine';
+import { StockLevelOkEvent } from '../events/stock-level-ok-event';
+import { Machine, MachineDocument, MachineModel } from '../machine';
 
-@Injectable()
-export class MachineRefillSubscriber implements ISubscriber {
-  public machines: Machine[];
+@EventsHandler(MachineRefillEvent)
+export class MachineRefillSubscriber
+  implements IEventHandler<MachineRefillEvent>
+{
+  constructor(@InjectModel(Machine.name) private machineModel: MachineModel) {}
 
-  constructor(machines: Machine[]) {
-    this.machines = machines;
-  }
+  async handle(event: MachineRefillEvent): Promise<void> {
+    const machine: MachineDocument | null = await this.machineModel.findOne({
+      id: event.machineId(),
+    });
 
-  @OnEvent(MachineStatus.REFILL)
-  handle(event: MachineRefillEvent): void {
-    const quantity: number = event.getRefillQuantity();
-    const indexOfMachine: number = this.machines.findIndex(
-      (machine: Machine): boolean => machine.getId() === event.machineId(),
-    );
-    const machine: Machine = this.machines[indexOfMachine];
+    if (!machine) return;
 
-    machine.refillStock(quantity);
-    const stockLevel: number = machine.getStockLevel();
+    machine.refillStock(event.getRefillQuantity());
 
-    console.log(
-      `Machine ${event.machineId()}, refilled ${quantity}. Remaining stock: ${stockLevel}.`,
-    );
+    if (machine.stockLevel >= machine.threshold) {
+      console.log('Stock level ok, emitting StockLevelOkEvent');
+
+      new StockLevelOkEvent(machine.id, machine.stockLevel);
+    }
+
+    await machine.save();
   }
 }

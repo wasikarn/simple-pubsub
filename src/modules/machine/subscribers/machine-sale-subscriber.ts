@@ -1,32 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectModel } from '@nestjs/mongoose';
 
-import { MachineStatus } from '../../../commons/enums';
+import { LowStockWarningEvent } from '../events/low-stock-warning-event';
 import { MachineSaleEvent } from '../events/machine-sale-event';
-import { ISubscriber } from '../interfaces/subscriber.interface';
-import { Machine } from '../machine';
+import { Machine, MachineDocument, MachineModel } from '../machine';
 
-@Injectable()
-export class MachineSaleSubscriber implements ISubscriber {
-  public machines: Machine[];
+@EventsHandler(MachineSaleEvent)
+export class MachineSaleSubscriber implements IEventHandler<MachineSaleEvent> {
+  constructor(@InjectModel(Machine.name) private machineModel: MachineModel) {}
 
-  constructor(machines: Machine[]) {
-    this.machines = machines;
-  }
+  async handle(event: MachineSaleEvent): Promise<void> {
+    const machine: MachineDocument | null = await this.machineModel.findOne({
+      id: event.machineId(),
+    });
 
-  @OnEvent(MachineStatus.SALE)
-  handle(event: MachineSaleEvent): void {
-    const quantity: number = event.getSoldQuantity();
-    const indexOfMachine: number = this.machines.findIndex(
-      (machine: Machine): boolean => machine.getId() === event.machineId(),
-    );
-    const machine: Machine = this.machines[indexOfMachine];
+    if (!machine) return;
 
-    machine.reduceStock(quantity);
-    const stockLevel: number = machine.getStockLevel();
+    machine.reduceStock(event.getSoldQuantity());
 
-    console.log(
-      `Machine ${event.machineId()}, sold ${quantity}. Remaining stock: ${stockLevel}.`,
-    );
+    if (machine.stockLevel < machine.threshold) {
+      console.log(
+        'Stock dropped below threshold, emitting LowStockWarningEvent',
+      );
+
+      new LowStockWarningEvent(machine.id, machine.stockLevel);
+    }
+
+    await machine.save();
   }
 }

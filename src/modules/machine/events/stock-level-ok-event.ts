@@ -3,8 +3,8 @@ import { IEvent } from '../interfaces/event.interface';
 
 export class StockLevelOkEvent implements IEvent {
   constructor(
-    private readonly _stock: number,
     private readonly _machineId: string,
+    private readonly _stock: number,
   ) {
     console.log(`${StockLevelOkEvent.name} emitted`);
   }
