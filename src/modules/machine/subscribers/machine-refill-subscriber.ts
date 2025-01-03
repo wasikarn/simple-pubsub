@@ -27,30 +27,14 @@ export class MachineRefillSubscriber implements ISubscriber {
 
     machine.stockLevel += event.getRefillQuantity();
 
-    if (this.isStockLevelOk(machine)) {
-      machine.stockLevelOkEmitted = true;
-
+    if (machine.isStockSufficient()) {
       this.pubSubService.publish(
         new StockLevelOkEvent(machine.id, machine.stockLevel),
       );
     }
 
-    if (this.needsRefill(machine)) {
-      machine.lowStockWarningEmitted = false;
-    }
-
     this.logger.log(
       `Machine refill event handled. machineId: ${machine.id}, stock: ${machine.stockLevel} units`,
-    );
-  }
-
-  private needsRefill(machine: Machine) {
-    return machine.stockLevel < machine.threshold;
-  }
-
-  private isStockLevelOk(machine: Machine) {
-    return (
-      machine.stockLevel >= machine.threshold && !machine.stockLevelOkEmitted
     );
   }
 }

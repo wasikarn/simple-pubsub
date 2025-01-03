@@ -1,17 +1,25 @@
 export class Machine {
-  public stockLevel: number;
-  public threshold: number;
-  public lowStockWarningEmitted: boolean;
-  public stockLevelOkEmitted: boolean;
+  public id: string;
+  public stockLevel = 10;
+  public threshold = 3;
 
-  constructor(
-    public readonly id: string,
-    initialStock = 10,
-    threshold = 3,
-  ) {
-    this.stockLevel = initialStock;
-    this.threshold = threshold;
-    this.lowStockWarningEmitted = false;
-    this.stockLevelOkEmitted = false;
+  constructor(id: string) {
+    this.id = id;
+  }
+
+  isLowerStock(): boolean {
+    return this.stockLevel < this.threshold;
+  }
+
+  isStockSufficient(): boolean {
+    return this.stockLevel >= this.threshold;
+  }
+
+  decrementStock(quantity: number): void {
+    this.stockLevel -= quantity;
+  }
+
+  incrementStock(quantity: number): void {
+    this.stockLevel += quantity;
   }
 }

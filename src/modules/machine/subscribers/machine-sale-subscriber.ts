@@ -27,30 +27,14 @@ export class MachineSaleSubscriber implements ISubscriber {
 
     machine.stockLevel -= event.getSoldQuantity();
 
-    if (this.isLowStockWarningNeeded(machine)) {
-      machine.lowStockWarningEmitted = true;
-
+    if (machine.isLowerStock()) {
       this.pubSubService.publish(
         new LowStockWarningEvent(machine.id, machine.stockLevel),
       );
     }
 
-    if (this.isAvailableForSale(machine)) {
-      machine.stockLevelOkEmitted = false;
-    }
-
     this.logger.log(
       `Machine sale event handled. machineId: ${machine.id}, stock: ${machine.stockLevel} units`,
-    );
-  }
-
-  private isAvailableForSale(machine: Machine) {
-    return machine.stockLevel >= machine.threshold;
-  }
-
-  private isLowStockWarningNeeded(machine: Machine): boolean {
-    return (
-      machine.stockLevel < machine.threshold && !machine.lowStockWarningEmitted
     );
   }
 }
