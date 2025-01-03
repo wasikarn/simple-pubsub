@@ -8,10 +8,10 @@ export class LowStockWarningEvent implements IEvent {
 
   constructor(
     private readonly _machineId: string,
-    private readonly _stock: number,
+    private readonly stock: number,
   ) {
     this.logger.log(
-      `${LowStockWarningEvent.name} emitted. machineId: ${_machineId}, stock: ${_stock}`,
+      `${LowStockWarningEvent.name} emitted. machineId: ${_machineId}, stock: ${stock}`,
     );
   }
 
@@ -24,6 +24,6 @@ export class LowStockWarningEvent implements IEvent {
   }
 
   getStockQuantity(): number {
-    return this._stock;
+    return this.stock;
   }
 }

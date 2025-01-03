@@ -2,9 +2,13 @@ import { Logger, NotFoundException } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 
+import {
+  Machine,
+  MachineDocument,
+  MachineModel,
+} from '../entities/machine.entity';
 import { MachineRefillEvent } from '../events/machine-refill-event';
 import { StockLevelOkEvent } from '../events/stock-level-ok-event';
-import { Machine, MachineDocument, MachineModel } from '../machine';
 
 @EventsHandler(MachineRefillEvent)
 export class MachineRefillSubscriber
@@ -27,7 +31,9 @@ export class MachineRefillSubscriber
 
     machine.stockLevel += event.getRefillQuantity();
 
-    if (machine.stockLevel >= machine.threshold) {
+    if (machine.stockLevel >= machine.threshold && machine.lowStock) {
+      machine.lowStock = false;
+
       this.logger.log('Stock level ok, emitting StockLevelOkEvent');
 
       new StockLevelOkEvent(machine.id, machine.stockLevel);

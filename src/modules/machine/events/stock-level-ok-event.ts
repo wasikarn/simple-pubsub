@@ -8,10 +8,10 @@ export class StockLevelOkEvent implements IEvent {
 
   constructor(
     private readonly _machineId: string,
-    private readonly _stock: number,
+    private readonly stock: number,
   ) {
     this.logger.log(
-      `${StockLevelOkEvent.name} emitted. machineId: ${_machineId}, stock: ${_stock}`,
+      `${StockLevelOkEvent.name} emitted. machineId: ${_machineId}, stock: ${stock}`,
     );
   }
 
@@ -24,6 +24,6 @@ export class StockLevelOkEvent implements IEvent {
   }
 
   getStockQuantity(): number {
-    return this._stock;
+    return this.stock;
   }
 }

@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Machine, MachineDocument, MachineModel } from './machine';
+import {
+  Machine,
+  MachineDocument,
+  MachineModel,
+} from './entities/machine.entity';
 
 @Injectable()
 export class MachineService {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Machine, MachineSchema } from './machine';
+import { Machine, MachineSchema } from './entities/machine.entity';
 import { MachineService } from './machine.service';
 import { PublishSubscribeService } from './publish-subscribe.service';
 import { LowStockWarningSubscriber } from './subscribers/low-stock-warning-subscriber';

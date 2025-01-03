@@ -7,11 +7,11 @@ export class MachineSaleEvent implements IEvent {
   private readonly logger: Logger = new Logger(MachineSaleEvent.name);
 
   constructor(
-    private readonly _sold: number,
+    private readonly sold: number,
     private readonly _machineId: string,
   ) {
     this.logger.log(
-      `${MachineSaleEvent.name} emitted. machineId: ${_machineId}, sold: ${_sold}`,
+      `${MachineSaleEvent.name} emitted. machineId: ${_machineId}, sold: ${sold}`,
     );
   }
 
@@ -24,6 +24,6 @@ export class MachineSaleEvent implements IEvent {
   }
 
   getSoldQuantity(): number {
-    return this._sold;
+    return this.sold;
   }
 }

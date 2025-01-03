@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 
 import { eventGenerator } from './commons/helpers';
+import { Machine } from './modules/machine/entities/machine.entity';
 import { IEvent } from './modules/machine/interfaces/event.interface';
-import { Machine } from './modules/machine/machine';
 import { MachineService } from './modules/machine/machine.service';
 import { PublishSubscribeService } from './modules/machine/publish-subscribe.service';
 

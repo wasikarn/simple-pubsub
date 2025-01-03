@@ -7,11 +7,11 @@ export class MachineRefillEvent implements IEvent {
   private readonly logger: Logger = new Logger(MachineRefillEvent.name);
 
   constructor(
-    private readonly _refill: number,
+    private readonly refill: number,
     private readonly _machineId: string,
   ) {
     this.logger.log(
-      `${MachineRefillEvent.name} emitted. machineId: ${_machineId}, refill: ${_refill}`,
+      `${MachineRefillEvent.name} emitted. machineId: ${_machineId}, refill: ${refill}`,
     );
   }
 
@@ -24,6 +24,6 @@ export class MachineRefillEvent implements IEvent {
   }
 
   getRefillQuantity(): number {
-    return this._refill;
+    return this.refill;
   }
 }

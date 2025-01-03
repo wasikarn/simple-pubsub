@@ -15,20 +15,15 @@ export class Machine {
   @Prop({ default: 3 })
   public threshold: number;
 
+  @Prop({ default: false })
+  public lowStock: boolean;
+
   constructor(id: string) {
     this._id = id;
   }
 
   get id(): string {
     return this._id.toString();
-  }
-
-  reduceStock(quantity: number): void {
-    this.stockLevel -= quantity;
-  }
-
-  refillStock(quantity: number): void {
-    this.stockLevel += quantity;
   }
 }
 
