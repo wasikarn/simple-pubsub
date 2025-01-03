@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AppController } from './app.controller';
-import { randomMachine } from './commons/helpers';
+import { eventGenerator, randomMachine } from './commons/helpers';
 import { MachineRefillEvent } from './modules/machine/events/machine-refill-event';
 import { MachineSaleEvent } from './modules/machine/events/machine-sale-event';
 import { PublishSubscribeService } from './modules/machine/services/publish-subscribe.service';
 
-jest.mock('./commons/helpers');
+jest.mock('./commons/helpers', () => ({
+  eventGenerator: jest.fn(),
+  randomMachine: jest.fn(),
+}));
 
 describe('AppController', () => {
   let appController: AppController;
@@ -85,6 +88,30 @@ describe('AppController', () => {
       expect(randomMachine).toHaveBeenCalled();
       expect(pubSubService.publish).toHaveBeenCalledWith(
         new MachineRefillEvent(refillQty, randomMachineId),
+      );
+    });
+  });
+
+  describe('random', () => {
+    it('should generate 5 events using the eventGenerator and publish them', () => {
+      const generatedEvents: string[] = [
+        'event1',
+        'event2',
+        'event3',
+        'event4',
+        'event5',
+      ];
+
+      (eventGenerator as jest.Mock).mockImplementation((): string | undefined =>
+        generatedEvents.shift(),
+      );
+
+      appController.random();
+
+      expect(eventGenerator).toHaveBeenCalledTimes(5);
+      expect(pubSubService.publish).toHaveBeenCalledTimes(5);
+      generatedEvents.forEach((event: string): void =>
+        expect(pubSubService.publish).toHaveBeenCalledWith(event),
       );
     });
   });
