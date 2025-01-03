@@ -5,7 +5,6 @@ import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { MachineModule } from './modules/machine/machine.module';
-import { PublishSubscribeService } from './publishSubscribeService';
 
 @Module({
   controllers: [AppController],
@@ -31,6 +30,5 @@ import { PublishSubscribeService } from './publishSubscribeService';
     }),
     MachineModule,
   ],
-  providers: [PublishSubscribeService],
 })
 export class AppModule {}

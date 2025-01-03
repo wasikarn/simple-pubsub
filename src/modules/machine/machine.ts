@@ -15,6 +15,10 @@ export class Machine {
   @Prop({ default: 3 })
   public threshold: number;
 
+  constructor(id: string) {
+    this.id = id;
+  }
+
   reduceStock(quantity: number): void {
     this.stockLevel -= quantity;
   }
