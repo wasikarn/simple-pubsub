@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { InventoryState } from '../../../commons/enums';
+import { Events } from '../../../commons/enums';
 import { LowStockWarningEvent } from '../events/low-stock-warning-event';
 import { ISubscriber } from '../interfaces/subscriber.interface';
 
@@ -9,7 +9,7 @@ import { ISubscriber } from '../interfaces/subscriber.interface';
 export class LowStockWarningSubscriber implements ISubscriber {
   private readonly logger: Logger = new Logger(LowStockWarningSubscriber.name);
 
-  @OnEvent(InventoryState.STOCK_WARNING)
+  @OnEvent(Events.LOW_STOCK_WARNING)
   handle(event: LowStockWarningEvent): void {
     const machineId: string = event.machineId();
     const quantity: number = event.getStockQuantity();

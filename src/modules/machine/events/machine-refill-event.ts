@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-import { InventoryState } from '../../../commons/enums';
+import { Events } from '../../../commons/enums';
 import { IEvent } from '../interfaces/event.interface';
 
 export class MachineRefillEvent implements IEvent {
@@ -20,7 +20,7 @@ export class MachineRefillEvent implements IEvent {
   }
 
   type(): string {
-    return InventoryState.REFILL;
+    return Events.REFILL;
   }
 
   getRefillQuantity(): number {

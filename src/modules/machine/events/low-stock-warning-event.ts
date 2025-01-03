@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-import { InventoryState } from '../../../commons/enums';
+import { Events } from '../../../commons/enums';
 import { IEvent } from '../interfaces/event.interface';
 
 export class LowStockWarningEvent implements IEvent {
@@ -20,7 +20,7 @@ export class LowStockWarningEvent implements IEvent {
   }
 
   type(): string {
-    return InventoryState.STOCK_WARNING;
+    return Events.LOW_STOCK_WARNING;
   }
 
   getStockQuantity(): number {

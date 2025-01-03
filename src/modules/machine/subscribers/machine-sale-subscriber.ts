@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { machines } from '../../../commons/constants';
-import { InventoryState } from '../../../commons/enums';
+import { Events } from '../../../commons/enums';
 import { Machine } from '../entities/machine.entity';
 import { LowStockWarningEvent } from '../events/low-stock-warning-event';
 import { MachineSaleEvent } from '../events/machine-sale-event';
@@ -15,7 +15,7 @@ export class MachineSaleSubscriber implements ISubscriber {
 
   constructor(private readonly pubSubService: PublishSubscribeService) {}
 
-  @OnEvent(InventoryState.SALE)
+  @OnEvent(Events.SALE)
   handle(event: MachineSaleEvent): void {
     const machine: Machine | undefined = machines.find(
       (machine: Machine): boolean => machine.id === event.machineId(),
