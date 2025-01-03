@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 
-import { machines } from '../../commons/constants';
 import { PublishSubscribeService } from './services/publish-subscribe.service';
 import { LowStockWarningSubscriber } from './subscribers/low-stock-warning-subscriber';
 import { MachineRefillSubscriber } from './subscribers/machine-refill-subscriber';
@@ -11,14 +10,8 @@ import { StockLevelOkSubscriber } from './subscribers/stock-level-ok-subscriber'
   exports: [PublishSubscribeService],
   providers: [
     PublishSubscribeService,
-    {
-      provide: MachineSaleSubscriber,
-      useValue: new MachineSaleSubscriber(machines),
-    },
-    {
-      provide: MachineRefillSubscriber,
-      useValue: new MachineRefillSubscriber(machines),
-    },
+    MachineSaleSubscriber,
+    MachineRefillSubscriber,
     LowStockWarningSubscriber,
     StockLevelOkSubscriber,
   ],
