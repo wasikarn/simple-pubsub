@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -10,6 +10,8 @@ import { Machine, MachineDocument, MachineModel } from '../machine';
 export class MachineRefillSubscriber
   implements IEventHandler<MachineRefillEvent>
 {
+  private readonly logger: Logger = new Logger(MachineRefillSubscriber.name);
+
   constructor(@InjectModel(Machine.name) private machineModel: MachineModel) {}
 
   async handle(event: MachineRefillEvent): Promise<void> {
@@ -26,7 +28,7 @@ export class MachineRefillSubscriber
     machine.stockLevel += event.getRefillQuantity();
 
     if (machine.stockLevel >= machine.threshold) {
-      console.log('Stock level ok, emitting StockLevelOkEvent');
+      this.logger.log('Stock level ok, emitting StockLevelOkEvent');
 
       new StockLevelOkEvent(machine.id, machine.stockLevel);
     }
