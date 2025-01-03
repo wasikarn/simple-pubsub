@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { AppService } from './app.service';
 import { eventGenerator } from './commons/helpers';
 import { IEvent } from './modules/machine/interfaces/event.interface';
+import { PublishSubscribeService } from './modules/machine/publish-subscribe.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly pubSubService: PublishSubscribeService) {}
 
   @Get()
   run(): void {
@@ -14,6 +14,6 @@ export class AppController {
       .fill(undefined)
       .map((): IEvent => eventGenerator());
 
-    events.map((event: IEvent): void => this.appService.publish(event));
+    events.map((event: IEvent): void => this.pubSubService.publish(event));
   }
 }

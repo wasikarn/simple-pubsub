@@ -4,8 +4,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MachineModule } from './modules/machine/machine.module';
+import { PublishSubscribeService } from './publishSubscribeService';
 
 @Module({
   controllers: [AppController],
@@ -31,6 +31,6 @@ import { MachineModule } from './modules/machine/machine.module';
     }),
     MachineModule,
   ],
-  providers: [AppService],
+  providers: [PublishSubscribeService],
 })
 export class AppModule {}
