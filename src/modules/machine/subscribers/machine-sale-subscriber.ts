@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -14,9 +15,13 @@ export class MachineSaleSubscriber implements IEventHandler<MachineSaleEvent> {
       _id: event.machineId(),
     });
 
-    if (!machine) return;
+    if (!machine) {
+      throw new NotFoundException(
+        `Machine with id ${event.machineId()} not found`,
+      );
+    }
 
-    machine.reduceStock(event.getSoldQuantity());
+    machine.stockLevel -= event.getSoldQuantity();
 
     if (machine.stockLevel < machine.threshold) {
       console.log(

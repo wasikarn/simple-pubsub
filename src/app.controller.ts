@@ -1,6 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { machines } from './commons/constants';
 import { eventGenerator } from './commons/helpers';
 import { IEvent } from './modules/machine/interfaces/event.interface';
 import { Machine } from './modules/machine/machine';
@@ -16,6 +15,12 @@ export class AppController {
 
   @Get()
   run(): void {
+    const machines: Machine[] = [
+      new Machine('001'),
+      new Machine('002'),
+      new Machine('003'),
+    ];
+
     machines.forEach(async (machine: Machine): Promise<void> => {
       await this.machineService.findOrCreate(machine);
     });
