@@ -25,7 +25,7 @@ export class MachineRefillSubscriber implements ISubscriber {
       throw new NotFoundException();
     }
 
-    machine.stockLevel += event.getRefillQuantity();
+    machine.incrementStock(event.getRefillQuantity());
 
     if (machine.isStockSufficient()) {
       this.pubSubService.publish(

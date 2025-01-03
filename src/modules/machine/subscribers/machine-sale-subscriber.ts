@@ -25,7 +25,7 @@ export class MachineSaleSubscriber implements ISubscriber {
       throw new NotFoundException();
     }
 
-    machine.stockLevel -= event.getSoldQuantity();
+    machine.decrementStock(event.getSoldQuantity());
 
     if (machine.isLowerStock()) {
       this.pubSubService.publish(
