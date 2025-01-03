@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { MachineStatus } from '../commons/enums';
+import { StockLevelOkEvent } from '../events/stock-level-ok-event';
 import { ISubscriber } from '../interfaces/subscriber.interface';
 import { Machine } from '../machine';
-import { StockLevelOkEvent } from '../publishers/stock-level-ok-event';
 
 @Injectable()
 export class StockLevelOkSubscriber implements ISubscriber {

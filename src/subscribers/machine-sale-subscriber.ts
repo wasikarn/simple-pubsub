@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { MachineStatus } from '../commons/enums';
+import { MachineSaleEvent } from '../events/machine-sale-event';
 import { ISubscriber } from '../interfaces/subscriber.interface';
 import { Machine } from '../machine';
-import { MachineSaleEvent } from '../publishers/machine-sale-event';
 
 @Injectable()
 export class MachineSaleSubscriber implements ISubscriber {
