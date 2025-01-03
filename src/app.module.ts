@@ -5,11 +5,7 @@ import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { machines } from './commons/constants';
-import { LowStockWarningSubscriber } from './subscribers/low-stock-warning-subscriber';
-import { MachineRefillSubscriber } from './subscribers/machine-refill-subscriber';
-import { MachineSaleSubscriber } from './subscribers/machine-sale-subscriber';
-import { StockLevelOkSubscriber } from './subscribers/stock-level-ok-subscriber';
+import { MachineModule } from './modules/machine/machine.module';
 
 @Module({
   controllers: [AppController],
@@ -33,25 +29,8 @@ import { StockLevelOkSubscriber } from './subscribers/stock-level-ok-subscriber'
         };
       },
     }),
+    MachineModule,
   ],
-  providers: [
-    AppService,
-    {
-      provide: MachineSaleSubscriber,
-      useValue: new MachineSaleSubscriber(machines),
-    },
-    {
-      provide: MachineRefillSubscriber,
-      useValue: new MachineRefillSubscriber(machines),
-    },
-    {
-      provide: LowStockWarningSubscriber,
-      useValue: new LowStockWarningSubscriber(machines),
-    },
-    {
-      provide: StockLevelOkSubscriber,
-      useValue: new StockLevelOkSubscriber(machines),
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

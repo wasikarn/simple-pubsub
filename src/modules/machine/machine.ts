@@ -1,6 +1,15 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type MachineDocument = HydratedDocument<Machine>;
+
+@Schema({ _id: false, collection: 'machines' })
 export class Machine {
+  @Prop()
   public id: string;
-  public stockLevel = 10;
+
+  @Prop({ default: 10 })
+  public stockLevel: number;
 
   constructor(id: string) {
     this.id = id;
@@ -26,3 +35,5 @@ export class Machine {
     this.stockLevel += quantity;
   }
 }
+
+export const MachineSchema = SchemaFactory.createForClass(Machine);

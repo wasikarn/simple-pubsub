@@ -1,6 +1,6 @@
-import { MachineRefillEvent } from '../events/machine-refill-event';
-import { MachineSaleEvent } from '../events/machine-sale-event';
-import { IEvent } from '../interfaces/event.interface';
+import { MachineRefillEvent } from '../modules/machine/events/machine-refill-event';
+import { MachineSaleEvent } from '../modules/machine/events/machine-sale-event';
+import { IEvent } from '../modules/machine/interfaces/event.interface';
 
 export const randomMachine: () => string = (): string => {
   const random: number = Math.random() * 3;

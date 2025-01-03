@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { MachineStatus } from '../commons/enums';
+import { MachineStatus } from '../../../commons/enums';
 import { LowStockWarningEvent } from '../events/low-stock-warning-event';
 import { Machine } from '../machine';
 

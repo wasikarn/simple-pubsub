@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { eventGenerator } from './commons/helpers';
-import { IEvent } from './interfaces/event.interface';
+import { IEvent } from './modules/machine/interfaces/event.interface';
 
 @Controller()
 export class AppController {

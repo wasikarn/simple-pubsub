@@ -1,4 +1,4 @@
-import { Machine } from '../machine';
+import { Machine } from '../modules/machine/machine';
 
 export const machines: Machine[] = [
   new Machine('001'),

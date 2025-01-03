@@ -1,4 +1,4 @@
-import { MachineStatus } from '../commons/enums';
+import { MachineStatus } from '../../../commons/enums';
 import { IEvent } from '../interfaces/event.interface';
 
 export class MachineRefillEvent implements IEvent {

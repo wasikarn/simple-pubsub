@@ -1,12 +1,12 @@
-import { MachineStatus } from '../commons/enums';
+import { MachineStatus } from '../../../commons/enums';
 import { IEvent } from '../interfaces/event.interface';
 
-export class StockLevelOkEvent implements IEvent {
+export class LowStockWarningEvent implements IEvent {
   constructor(
     private readonly _stock: number,
     private readonly _machineId: string,
   ) {
-    console.log(`${StockLevelOkEvent.name} emitted`);
+    console.log(`${LowStockWarningEvent.name} emitted`);
   }
 
   machineId(): string {
@@ -14,7 +14,7 @@ export class StockLevelOkEvent implements IEvent {
   }
 
   type(): string {
-    return MachineStatus.STOCK_OK;
+    return MachineStatus.STOCK_WARNING;
   }
 
   getStockQuantity(): number {
