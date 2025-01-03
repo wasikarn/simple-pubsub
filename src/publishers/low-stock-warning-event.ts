@@ -14,7 +14,7 @@ export class LowStockWarningEvent implements IEvent {
   }
 
   type(): string {
-    return MachineStatus.LOW_STOCK_WARNING;
+    return MachineStatus.STOCK_WARNING;
   }
 
   getStockQuantity(): number {

@@ -14,7 +14,7 @@ export class LowStockWarningSubscriber implements ISubscriber {
     this.machines = machines;
   }
 
-  @OnEvent(MachineStatus.LOW_STOCK_WARNING)
+  @OnEvent(MachineStatus.STOCK_WARNING)
   handle(event: LowStockWarningEvent): void {
     const quantity: number = event.getStockQuantity();
     const indexOfMachine: number = this.machines.findIndex(

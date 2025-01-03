@@ -14,7 +14,7 @@ export class StockLevelOkEvent implements IEvent {
   }
 
   type(): string {
-    return MachineStatus.STOCK_LEVEL_OK;
+    return MachineStatus.STOCK_OK;
   }
 
   getStockQuantity(): number {
