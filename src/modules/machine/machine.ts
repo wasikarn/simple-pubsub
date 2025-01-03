@@ -4,10 +4,10 @@ import { HydratedDocument, Model } from 'mongoose';
 export type MachineDocument = HydratedDocument<Machine>;
 export type MachineModel = Model<MachineDocument>;
 
-@Schema({ _id: false, collection: 'machines' })
+@Schema({ collection: 'machines', versionKey: false })
 export class Machine {
-  @Prop()
-  public id: string;
+  @Prop({ required: true })
+  public _id: string;
 
   @Prop({ default: 10 })
   public stockLevel: number;
@@ -16,7 +16,11 @@ export class Machine {
   public threshold: number;
 
   constructor(id: string) {
-    this.id = id;
+    this._id = id;
+  }
+
+  get id(): string {
+    return this._id.toString();
   }
 
   reduceStock(quantity: number): void {

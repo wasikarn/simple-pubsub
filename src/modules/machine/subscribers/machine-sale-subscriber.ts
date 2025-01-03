@@ -11,7 +11,7 @@ export class MachineSaleSubscriber implements IEventHandler<MachineSaleEvent> {
 
   async handle(event: MachineSaleEvent): Promise<void> {
     const machine: MachineDocument | null = await this.machineModel.findOne({
-      id: event.machineId(),
+      _id: event.machineId(),
     });
 
     if (!machine) return;
