@@ -12,9 +12,7 @@ export class AppController {
 
   @Get('sale')
   sale(@Query('machineId') machineId: string): void {
-    if (!machineId) {
-      machineId = randomMachine();
-    }
+    if (!machineId) machineId = randomMachine();
 
     const saleQty: number = Math.random() < 0.5 ? 1 : 2;
     const machineSaleEvent = new MachineSaleEvent(saleQty, machineId);
@@ -24,9 +22,7 @@ export class AppController {
 
   @Get('refill')
   refill(@Query('machineId') machineId: string): void {
-    if (!machineId) {
-      machineId = randomMachine();
-    }
+    if (!machineId) machineId = randomMachine();
 
     const refillQty: number = Math.random() < 0.5 ? 3 : 5;
     const machineRefillEvent = new MachineRefillEvent(refillQty, machineId);

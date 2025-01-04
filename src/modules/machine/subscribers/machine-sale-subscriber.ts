@@ -17,13 +17,7 @@ export class MachineSaleSubscriber implements ISubscriber {
 
   @OnEvent(Events.SALE)
   handle(event: MachineSaleEvent): void {
-    const machine: Machine | undefined = machines.find(
-      (machine: Machine): boolean => machine.id === event.machineId(),
-    );
-
-    if (!machine) {
-      throw new NotFoundException();
-    }
+    const machine: Machine = this.findMachineById(event.machineId());
 
     if (machine.isOutOfStock()) {
       this.logger.error(`Machine out of stock. machineId: ${machine.id}`);
@@ -33,18 +27,40 @@ export class MachineSaleSubscriber implements ISubscriber {
 
     machine.decrementStock(event.getSoldQuantity());
 
-    if (machine.isLowerStock() && !machine.isLowStockWaring) {
-      machine.isLowStockWaring = true;
-
-      this.pubSubService.publish(
-        new LowStockWarningEvent(machine.id, machine.stockLevel),
-      );
-
-      return;
-    }
+    this.handleLowStockWarning(machine);
 
     this.logger.log(
       `Machine sale event handled. machineId: ${machine.id}, stock: ${machine.stockLevel} units`,
+    );
+  }
+
+  private findMachineById(machineId: string): Machine {
+    const machine: Machine | undefined = machines.find(
+      (machine: Machine): boolean => machine.id === machineId,
+    );
+
+    if (!machine) {
+      throw new NotFoundException('Machine not found');
+    }
+
+    return machine;
+  }
+
+  private handleLowStockWarning(machine: Machine): void {
+    if (!this.shouldPublishLowStockWarning(machine)) return;
+
+    this.publishLowStockWarning(machine);
+  }
+
+  private shouldPublishLowStockWarning(machine: Machine): boolean {
+    return machine.isOutOfStock() && !machine.isLowStockWaring;
+  }
+
+  private publishLowStockWarning(machine: Machine): void {
+    machine.isLowStockWaring = true;
+
+    this.pubSubService.publish(
+      new LowStockWarningEvent(machine.id, machine.stockLevel),
     );
   }
 }

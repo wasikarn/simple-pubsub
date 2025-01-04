@@ -17,28 +17,36 @@ export class MachineRefillSubscriber implements ISubscriber {
 
   @OnEvent(Events.REFILL)
   handle(event: MachineRefillEvent): void {
-    const machine: Machine | undefined = machines.find(
-      (machine: Machine): boolean => machine.id === event.machineId(),
-    );
-
-    if (!machine) {
-      throw new NotFoundException();
-    }
+    const machine: Machine = this.findMachineById(event.machineId());
 
     machine.incrementStock(event.getRefillQuantity());
 
-    if (machine.isStockSufficient()) {
-      machine.isLowStockWaring = false;
-
-      this.pubSubService.publish(
-        new StockLevelOkEvent(machine.id, machine.stockLevel),
-      );
-
-      return;
-    }
+    this.handleStockStatus(machine);
 
     this.logger.log(
       `Machine refill event handled. machineId: ${machine.id}, stock: ${machine.stockLevel} units`,
+    );
+  }
+
+  private findMachineById(machineId: string): Machine {
+    const machine: Machine | undefined = machines.find(
+      (machine: Machine): boolean => machine.id === machineId,
+    );
+
+    if (!machine) {
+      throw new NotFoundException('Machine not found');
+    }
+
+    return machine;
+  }
+
+  private handleStockStatus(machine: Machine): void {
+    if (!machine.isStockSufficient()) return;
+
+    machine.isLowStockWaring = false;
+
+    this.pubSubService.publish(
+      new StockLevelOkEvent(machine.id, machine.stockLevel),
     );
   }
 }
