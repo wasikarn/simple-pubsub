@@ -28,6 +28,13 @@ export class MachineRefillSubscriber implements ISubscriber {
     );
   }
 
+  /**
+   * Finds and returns a machine by its unique identifier.
+   *
+   * @param {string} machineId - The unique identifier of the machine to find.
+   * @return {Machine} The machine object with the matching identifier.
+   * @throws {NotFoundException} If the machine with the given identifier is not found.
+   */
   private findMachineById(machineId: string): Machine {
     const machine: Machine | undefined = machines.find(
       (machine: Machine): boolean => machine.id === machineId,
@@ -40,6 +47,13 @@ export class MachineRefillSubscriber implements ISubscriber {
     return machine;
   }
 
+  /**
+   * Manages the stock status of the provided machine by evaluating its stock levels
+   * and emitting relevant events based on its current state.
+   *
+   * @param {Machine} machine - The machine whose stock status needs to be checked and handled.
+   * @return {void} This method does not return a value.
+   */
   private handleStockStatus(machine: Machine): void {
     if (!machine.isStockSufficient()) return;
 

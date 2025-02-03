@@ -34,6 +34,13 @@ export class MachineSaleSubscriber implements ISubscriber {
     );
   }
 
+  /**
+   * Finds a machine by its unique identifier.
+   *
+   * @param {string} machineId - The unique identifier of the machine to find.
+   * @return {Machine} The machine object that matches the provided identifier.
+   * @throws {NotFoundException} If no machine is found with the given identifier.
+   */
   private findMachineById(machineId: string): Machine {
     const machine: Machine | undefined = machines.find(
       (machine: Machine): boolean => machine.id === machineId,
@@ -46,16 +53,35 @@ export class MachineSaleSubscriber implements ISubscriber {
     return machine;
   }
 
+  /**
+   * Handles the low stock warning for a given machine by determining if a
+   * warning should be published and publishing it if necessary.
+   *
+   * @param {Machine} machine - The machine instance is to check for low stock and potentially publish a warning for.
+   * @return {void} Does not return a value.
+   */
   private handleLowStockWarning(machine: Machine): void {
     if (!this.shouldPublishLowStockWarning(machine)) return;
 
     this.publishLowStockWarning(machine);
   }
 
+  /**
+   * Determines whether a low stock warning should be published for the given machine.
+   *
+   * @param {Machine} machine - The machine to check the stock status of.
+   * @return {boolean} Returns true if the machine is out of stock and has not yet issued a low stock warning; otherwise, false.
+   */
   private shouldPublishLowStockWarning(machine: Machine): boolean {
     return machine.isOutOfStock() && !machine.isLowStockWaring;
   }
 
+  /**
+   * Publishes a low stock warning for the specified machine.
+   *
+   * @param {Machine} machine - The machine for which the low stock warning is to be published.
+   * @return {void} This method does not return a value.
+   */
   private publishLowStockWarning(machine: Machine): void {
     machine.isLowStockWaring = true;
 
