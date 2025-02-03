@@ -34,4 +34,7 @@ $ curl --location 'http://localhost:3000/refill?machineId=001'
 
 # test refill random event between MachineSaleEvent and MachineRefillEvent
 $ curl --location 'http://localhost:3000/random'
+
+# Run End to End test.
+$ bun run test:e2e
 ```
