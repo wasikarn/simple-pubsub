@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-import { Events } from '../../../commons/enums';
+import { Events } from '../../../commons/constants';
 import { IEvent } from '../interfaces/event.interface';
 
 export class LowStockWarningEvent implements IEvent {

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { Events } from '../../../commons/enums';
+import { Events } from '../../../commons/constants';
 import { StockLevelOkEvent } from '../events/stock-level-ok-event';
 import { ISubscriber } from '../interfaces/subscriber.interface';
 

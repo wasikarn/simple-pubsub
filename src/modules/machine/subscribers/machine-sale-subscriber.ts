@@ -1,8 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { machines } from '../../../commons/constants';
-import { Events } from '../../../commons/enums';
+import { Events, machines } from '../../../commons/constants';
 import { Machine } from '../entities/machine.entity';
 import { LowStockWarningEvent } from '../events/low-stock-warning-event';
 import { MachineSaleEvent } from '../events/machine-sale-event';
